@@ -28,12 +28,11 @@ def add_task():
     db.session.commit()
     return jsonify({"id": new_task.id, "title": new_task.title, "done": new_task.done}), 201
 
-# 🔧 Create database tables when the app starts, works in Render too
-with app.app_context():
-    db.create_all()
-
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)
+
 
 
 
