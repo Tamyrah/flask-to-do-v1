@@ -1,0 +1,21 @@
+from flask import Flask, render_template, jsonify
+
+app = Flask(__name__)
+
+# Sample in-memory task list
+tasks = [
+    {"id": 1, "title": "Do laundry", "done": False},
+    {"id": 2, "title": "Buy groceries", "done": True}
+]
+
+@app.route('/')
+def home():
+    return render_template('index.html')
+
+@app.route('/tasks', methods=['GET'])
+def get_tasks():
+    return jsonify({"tasks": tasks})
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
