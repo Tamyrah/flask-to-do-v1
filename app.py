@@ -1,37 +1,52 @@
-from flask import Flask, render_template, request, jsonify
-from flask_sqlalchemy import SQLAlchemy
+from flask import Flask, render_template, request, redirect
+from database import get_db_connection
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tasks.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
-
-class Task(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(200), nullable=False)
-    done = db.Column(db.Boolean, default=False)
 
 @app.route('/')
-def home():
-    return render_template('index.html')
+def index():
+    conn = get_db_connection()
+    tasks = conn.execute('SELECT * FROM tasks ORDER BY created_at DESC').fetchall()
+    conn.close()
+    return render_template('index.html', tasks=tasks)
 
-@app.route('/tasks', methods=['GET'])
-def get_tasks():
-    tasks = Task.query.all()
-    return jsonify([{"id": task.id, "title": task.title, "done": task.done} for task in tasks])
+@app.route('/', methods=['POST'])
+def add():
+    task_content = request.form['content']
+    due_date = request.form['due_date']
+    priority = request.form['priority']
+    
+    conn = get_db_connection()
+    conn.execute(
+        'INSERT INTO tasks (content, due_date, priority) VALUES (?, ?, ?)',
+        (task_content, due_date, priority)
+    )
+    conn.commit()
+    conn.close()
+    return redirect('/')
 
-@app.route('/tasks', methods=['POST'])
-def add_task():
-    data = request.get_json()
-    new_task = Task(title=data['title'])
-    db.session.add(new_task)
-    db.session.commit()
-    return jsonify({"id": new_task.id, "title": new_task.title, "done": new_task.done}), 201
+@app.route('/complete/<int:task_id>')
+def complete(task_id):
+    conn = get_db_connection()
+    conn.execute('UPDATE tasks SET completed = 1 WHERE id = ?', (task_id,))
+    conn.commit()
+    conn.close()
+    return redirect('/')
+
+@app.route('/delete/<int:task_id>')
+def delete(task_id):
+    conn = get_db_connection()
+    conn.execute('DELETE FROM tasks WHERE id = ?', (task_id,))
+    conn.commit()
+    conn.close()
+    return redirect('/')
 
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
     app.run(debug=True)
+
+
+
+
 
 
 
