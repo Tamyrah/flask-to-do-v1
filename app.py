@@ -1,36 +1,37 @@
-from flask import Flask, render_template, request, redirect
-import sqlite3
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flask To-Do App</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container py-5">
+    <h2 class="mb-4">My To-Do List</h2>
+    <form method="POST" action="/">
+        <div class="form-group d-flex">
+            <input type="text" name="task" class="form-control mr-2" placeholder="Enter a new task">
+            <button type="submit" class="btn btn-primary">Add Task</button>
+        </div>
+    </form>
 
-app = Flask(__name__)
-app.secret_key = "supersecretkey"  # Needed for form handling (can be anything random)
+    <ul class="list-group mt-4">
+        {% for task in tasks %}
+        <li class="list-group-item d-flex justify-content-between align-items-center {% if task['completed'] %}list-group-item-success{% endif %}">
+            {{ task['task'] }}
+            <div>
+                {% if not task['completed'] %}
+                <a href="/complete/{{ task['id'] }}" class="btn btn-success btn-sm mr-2">Complete</a>
+                {% endif %}
+                <a href="/delete/{{ task['id'] }}" class="btn btn-danger btn-sm">Delete</a>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+</body>
+</html>
 
-# ---------- Database Connection Helper ----------
-def get_db_connection():
-    conn = sqlite3.connect('todo.db')
-    conn.row_factory = sqlite3.Row
-    return conn
-
-# ---------- Home Route (GET + POST) ----------
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    conn = get_db_connection()
-
-    if request.method == 'POST':
-        task = request.form['task']
-        if task:
-            conn.execute('INSERT INTO tasks (task, completed) VALUES (?, ?)', (task, 0))
-            conn.commit()
-        conn.close()
-        return redirect('/')
-
-    # GET request: show tasks
-    tasks = conn.execute('SELECT * FROM tasks').fetchall()
-    conn.close()
-    return render_template('index.html', tasks=tasks)
-
-# ---------- Complete Task ----------
-@app.route('/complete/<int:task_id>')
-def complete(task_id):
 
 
 
