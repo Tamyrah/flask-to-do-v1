@@ -1,31 +1,32 @@
-from flask import Flask, render_template, request, redirect
-import sqlite3
+from flask import Flask, render_template, request, redirect, url_for
+from database import get_db_connection
 
 app = Flask(__name__)
 
-def get_db_connection():
-    conn = sqlite3.connect('todo.db')
-    conn.row_factory = sqlite3.Row
-    return conn
-
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/')
 def index():
     conn = get_db_connection()
-    if request.method == 'POST':
-        task = request.form['task']
-        conn.execute('INSERT INTO tasks (task, completed) VALUES (?, ?)', (task, 0))
-        conn.commit()
     tasks = conn.execute('SELECT * FROM tasks').fetchall()
     conn.close()
-    return render_template('todo_list.html', tasks=tasks)
+    return render_template('index.html', tasks=tasks)
+
+@app.route('/add', methods=['POST'])
+def add():
+    task = request.form['task']
+    if task:
+        conn = get_db_connection()
+        conn.execute('INSERT INTO tasks (task, completed) VALUES (?, ?)', (task, False))
+        conn.commit()
+        conn.close()
+    return redirect(url_for('index'))
 
 @app.route('/complete/<int:task_id>')
 def complete(task_id):
     conn = get_db_connection()
-    conn.execute('UPDATE tasks SET completed = 1 WHERE id = ?', (task_id,))
+    conn.execute('UPDATE tasks SET completed = ? WHERE id = ?', (True, task_id))
     conn.commit()
     conn.close()
-    return redirect('/')
+    return redirect(url_for('index'))
 
 @app.route('/delete/<int:task_id>')
 def delete(task_id):
@@ -33,10 +34,11 @@ def delete(task_id):
     conn.execute('DELETE FROM tasks WHERE id = ?', (task_id,))
     conn.commit()
     conn.close()
-    return redirect('/')
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.run(debug=True)
+
 
 
 

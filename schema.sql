@@ -3,7 +3,8 @@ DROP TABLE IF EXISTS tasks;
 CREATE TABLE tasks (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     task TEXT NOT NULL,
-    completed BOOLEAN NOT NULL DEFAULT 0
+    completed BOOLEAN NOT NULL CHECK (completed IN (0, 1))
 );
+
 
 

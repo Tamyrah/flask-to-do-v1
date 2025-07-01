@@ -1,21 +1,67 @@
-from flask import Flask, render_template, jsonify
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f4f6f8;
+    color: #333;
+    padding: 40px;
+    margin: 0;
+}
 
-app = Flask(__name__)
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 30px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    border-radius: 10px;
+}
 
-# Sample in-memory task list
-tasks = [
-    {"id": 1, "title": "Do laundry", "done": False},
-    {"id": 2, "title": "Buy groceries", "done": True}
-]
+h1 {
+    text-align: center;
+    color: #0074D9;
+}
 
-@app.route('/')
-def home():
-    return render_template('index.html')
+form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
 
-@app.route('/tasks', methods=['GET'])
-def get_tasks():
-    return jsonify({"tasks": tasks})
+input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+}
 
-if __name__ == '__main__':
-    app.run(debug=True)
+button {
+    padding: 10px 15px;
+    font-size: 16px;
+    background-color: #0074D9;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+button:hover {
+    background-color: #005fa3;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    background: #f9f9f9;
+    padding: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    border-radius: 4px;
+}
+
+li.completed {
+    text-decoration: line-through;
+    color: gray;
+}
 
