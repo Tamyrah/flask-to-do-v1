@@ -34,3 +34,12 @@ def complete(task_id):
     conn.commit()
     conn.close()
     return redirect('/')
+
+@app.route('/delete/<int:task_id>')
+def delete(task_id):
+    conn = get_db_connection()
+    conn.execute('DELETE FROM tasks WHERE id = ?', (task_id,))
+    conn.commit()
+    conn.close()
+    return redirect('/')
+
