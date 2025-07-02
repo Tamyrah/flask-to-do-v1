@@ -15,14 +15,15 @@ def index():
     conn.close()
     return render_template('index.html', tasks=tasks)
 
-@app.route('/add', methods=['POST'])
-def add():
-    task = request.form['task']
-    conn = get_db_connection()
-    conn.execute('INSERT INTO tasks (task, completed) VALUES (?, ?)', (task, 0))
+@app.route('/complete/<int:task_id>')
+def complete(task_id):
+    conn = sqlite3.connect('todo.db')
+    c = conn.cursor()
+    c.execute('UPDATE tasks SET completed = 1 WHERE id = ?', (task_id,))
     conn.commit()
     conn.close()
     return redirect('/')
+
 
 @app.route('/complete/<int:task_id>')
 def complete(task_id):
