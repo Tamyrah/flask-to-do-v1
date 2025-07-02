@@ -27,7 +27,7 @@ def add():
 @app.route('/complete/<int:task_id>')
 def complete(task_id):
     conn = get_db_connection()
-    conn.execute('UPDATE tasks SET completed = 1 WHERE id = ?', (tas
+conn.execute('UPDATE tasks SET completed = 1 WHERE id = ?', (task_id,))
 
 
 
