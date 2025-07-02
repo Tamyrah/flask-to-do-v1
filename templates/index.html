@@ -15,9 +15,8 @@
         <ul>
             {% for task in tasks %}
                 <li class="{{ 'completed' if task['completed'] else '' }}">
-                    {{ task['task'] }}
-                    <a href="/complete/{{ task['id'] }}">✅</a>
-                    <a href="/delete/{{ task['id'] }}">❌</a>
+                  <a href="/complete/{{ task['id'] }}">✅</a>
+<a href="/delete/{{ task['id'] }}">❌</a>
                 </li>
             {% endfor %}
         </ul>
