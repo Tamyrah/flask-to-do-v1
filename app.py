@@ -17,19 +17,19 @@ def get_db_connection():
 def index():
     conn = get_db_connection()
     if request.method == 'POST':
-    content = request.form['content']
-    due_date = request.form.get('due_date')
-    priority = request.form.get('priority')
-    status = request.form.get('status', 'Want to Read')
+        content = request.form['content']
+        due_date = request.form.get('due_date')
+        priority = request.form.get('priority')
+        status = request.form.get('status', 'Want to Read')
 
-    if content:
-        conn.execute(
-            'INSERT INTO tasks (content, due_date, priority, status) VALUES (?, ?, ?, ?)',
-            (content, due_date, priority, status)
-        )
-        conn.commit()
+        if content:
+                conn.execute(
+                    'INSERT INTO tasks (content, due_date, priority, status) VALUES (?, ?, ?, ?)',
+                    (content, due_date, priority, status)
+                )
+                conn.commit()
 
-    return redirect('/')
+        return redirect('/')
     
     tasks = conn.execute('SELECT * FROM tasks ORDER BY created_at DESC').fetchall()
     conn.close()
