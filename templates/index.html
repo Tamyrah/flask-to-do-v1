@@ -60,6 +60,7 @@
                             <div class="task-meta">
                                 {% if task['due_date'] %}📅 {{ task['due_date'] }} {% endif %}
                                 {% if task['priority'] %}• 🔺 {{ task['priority'] }}{% endif %}
+                                <p>Status: {{ task['status'] }}</p>
                             </div>
                         </div>
                         <div>
