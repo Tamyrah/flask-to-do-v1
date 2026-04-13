@@ -5,9 +5,6 @@ import os
 if not os.path.exists('todo.db'):
     import init_db
 
-if not os.path.exists('todo.db'):
-    import init_db
-
 app = Flask(__name__)
 
 # Database file path
