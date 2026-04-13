@@ -21,12 +21,12 @@ def index():
         due_date = request.form.get('due_date')  # may be blank
         priority = request.form.get('priority')  # may be blank
 
-        if content:
-            status = request.form.get('status', 'Want to Read')
+       if content:
+    status = request.form.get('status', 'Want to Read')
 
-conn.execute('INSERT INTO tasks (content, due_date, priority, status) VALUES (?, ?, ?, ?)',
-             (content, due_date, priority, status))
-            conn.commit()
+    conn.execute('INSERT INTO tasks (content, due_date, priority, status) VALUES (?, ?, ?, ?)',
+        (content, due_date, priority, status))
+    conn.commit()
         return redirect('/')
     
     tasks = conn.execute('SELECT * FROM tasks ORDER BY created_at DESC').fetchall()
