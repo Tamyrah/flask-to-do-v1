@@ -23,9 +23,7 @@ def index():
 
        if content:
     status = request.form.get('status', 'Want to Read')
-
-    conn.execute('INSERT INTO tasks (content, due_date, priority, status) VALUES (?, ?, ?, ?)',
-        (content, due_date, priority, status))
+    conn.execute('INSERT INTO tasks (content, due_date, priority, status) VALUES (?, ?, ?, ?)', (content, due_date, priority, status))
     conn.commit()
         return redirect('/')
     
