@@ -22,8 +22,10 @@ def index():
         priority = request.form.get('priority')  # may be blank
 
         if content:
-            conn.execute('INSERT INTO tasks (content, due_date, priority) VALUES (?, ?, ?)',
-                         (content, due_date, priority))
+            status = request.form.get('status', 'Want to Read')
+
+conn.execute('INSERT INTO tasks (content, due_date, priority, status) VALUES (?, ?, ?, ?)',
+             (content, due_date, priority, status))
             conn.commit()
         return redirect('/')
     
